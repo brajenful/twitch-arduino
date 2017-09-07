@@ -20,6 +20,8 @@ Wiring and sample code can be found [here](https://www.arduino.cc/en/Tutorial/Li
 * Two pushbuttons connected to pins 22 and 23 in pullup mode
 * Pin 15 (backlight anode) of the LCD connected to pin 8 through a 320 ohm resistor
 
+The pushbuttons can be removed as they do not directly affect the functionality of the script, however, I highly recommend keeping one in as it is used to clear the display. If you choose to remove the other one (which essentially just toggles the backlight), you will not need the Bounce2 library.
+
 ## Arduino libraries
 * Built-in LCD library
 * [Bounce2](https://github.com/thomasfredericks/Bounce2)
