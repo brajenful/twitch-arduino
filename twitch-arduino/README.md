@@ -1,6 +1,8 @@
 # Twitch notification system for Arduino
 
-This Python script takes the specified Twitch user's followed channels, and notifies the user through an LCD screen connected to an Arduino if a channel goes live.
+This script takes the specified Twitch user's followed channels, and notifies the user through an LCD screen connected to an Arduino if a channel goes live.
+
+Written in **Python 3**.
 
 Before running the script, make sure to fill in the required fields on the top of the twitch-arduino.py file:
 * **CLIENT_ID** *string* The client ID for your application. You can get one [here](https://dev.twitch.tv/dashboard/apps/create).
