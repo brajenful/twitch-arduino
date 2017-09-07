@@ -12,8 +12,8 @@ ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=TIMEOUT)
 follows_displayname = []           #display names of followed channels
 follows_channelname = []           #channel names of followed channels
 follows_userids = []               #user IDs of followed channels
-streams_online = []                #user IDs names of live channels
-streams_new = []                   #user IDs names of live channels that the user hasn't been notified of yet
+streams_online = []                #user IDs of live channels
+streams_new = []                   #user IDs of live channels that the user hasn't been notified of yet
 streams_old = []                   #user IDs of live channels that the user has already been notified of
 
 def getfollows(): #gets followed channels and puts them into a list
