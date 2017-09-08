@@ -52,23 +52,23 @@ def update_new(): #checks for any new live channels, and if there's any, sends a
 	global streams_new
 	streams_new = streams_online
 	if streams_new:
-		if streams_new[0] not in streams_old:
-			e = client.streams.get_stream_by_user(streams_new[0])
-			time.sleep(2)
-			ser.write(b'%r' % (e['channel']['display_name']))
-			print('%s is live!' % (e['channel']['display_name']))
-			streams_old.insert(0, streams_new[0])
-			del streams_new[0]
-		elif streams_new[0] in streams_old:
+		while streams_new:
+			if streams_new[0] not in streams_old:
+				e = client.streams.get_stream_by_user(streams_new[0])
+				time.sleep(2)
+				ser.write(b'%r' % (e['channel']['display_name']))
+				print('%s is live!' % (e['channel']['display_name']))
+				streams_old.insert(0, streams_new[0])
 			del streams_new[0]
 
 def update_old(): #checks if the channels are still online, if not, removes them from the list
 	global streams_old
 	if streams_old:
 		for i in range(len(streams_old)):
-			e = client.streams.get_stream_by_user(streams_old[i])
-			if e is None:
-				del streams_old[i]
+			if streams_old[i]:
+				e = client.streams.get_stream_by_user(streams_old[i])
+				if e is None:
+					del streams_old[i]
 
 
 def main(e):
@@ -82,7 +82,9 @@ def main(e):
 			getids();
 			update_online();
 			update_new();
+			print(streams_new)
 			update_old();
+			print(streams_old)
 		except requests.exceptions.HTTPError:
 			print('Internal server error, trying again...')
 		time.sleep(e)
