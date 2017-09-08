@@ -4,10 +4,10 @@ This script takes the specified Twitch user's followed channels, and notifies th
 
 Written in **Python 3**.
 
-Before running the script, make sure to fill in the required fields on the top of the twitch-arduino.py file:
+Before running the script, make sure to fill in the required fields in the config.py file:
 * **CLIENT_ID** *string* The client ID for your application. You can get one [here](https://dev.twitch.tv/dashboard/apps/create).
 * **OAUTH_ID** *string* Your OAuth token.
-* **USER_ID** *string* Your Twitch account's user ID.
+* **USERNAME** *string* Your Twitch username.
 * **SERIAL_PORT** *string* The serial port the Arduino is connected to.
 * **BAUD_RATE** *integer* Baud rate of the serial communication for the Arduino.
 * **TIMEOUT** *integer* Timeout value for the serial port.
