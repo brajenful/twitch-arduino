@@ -1,12 +1,14 @@
 import serial, time
+import config
 from twitch import TwitchClient
-CLIENT_ID = 
-OAUTH_ID = 
-USER_ID = 
-SERIAL_PORT = 
-BAUD_RATE = 
-TIMEOUT = 
-INTERVAL = 
+CLIENT_ID = config.CLIENT_ID
+OAUTH_ID = config.OAUTH_ID
+USERNAME = config.USERNAME
+SERIAL_PORT = config.SERIAL_PORT
+BAUD_RATE = config.BAUD_RATE
+TIMEOUT = config.TIMEOUT
+INTERVAL = config.INTERVAL
+user_id = None
 client = TwitchClient(CLIENT_ID, OAUTH_ID)
 ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=TIMEOUT)
 follows_displayname = []           #display names of followed channels
@@ -16,10 +18,16 @@ streams_online = []                #user IDs of live channels
 streams_new = []                   #user IDs of live channels that the user hasn't been notified of yet
 streams_old = []                   #user IDs of live channels that the user has already been notified of
 
+def login():
+	global user_id
+	users = client.users.translate_usernames_to_ids(USERNAME)
+	for user in users:
+		user_id = user.id
+
 def getfollows(): #gets followed channels and puts them into a list
 	del follows_displayname[:]
 	del follows_channelname[:]
-	e = client.users.get_follows(USER_ID)
+	e = client.users.get_follows(user_id)
 	for i in range(len(e)): #gets the display name
 		follows_displayname.insert(i, e[i]['channel']['display_name'])
 	for i in range(len(e)): #gets the channel name
@@ -40,15 +48,16 @@ def update_online(): #takes every channel that is online from the follows_userid
 			streams_online.insert(i, follows_userids[i])
 
 def update_new(): #checks for any new live channels, and if there's any, sends a notification through the serial port and puts them in the streams_old list
+	print('Checking for streams...')
 	streams_new = streams_online
-	if streams_new:
-		for i in range(len(streams_new)):
-			if streams_new[i] not in streams_old:
-				e = client.streams.get_stream_by_user(streams_new[i])
-				time.sleep(2)
-				ser.write(b'%r' % (e['channel']['display_name']))
-				streams_old.insert(i, streams_new[i])
-				del streams_new[i]
+	while streams_new:
+		if streams_new[0] not in streams_old:
+			e = client.streams.get_stream_by_user(streams_new[0])
+			time.sleep(2)
+			ser.write(b'%r' % (e['channel']['display_name']))
+			print('%s is live!' % (e['channel']['display_name']))
+			streams_old.insert(0, streams_new[0])
+			del streams_new[0]
 
 def update_old(): #checks if the channels are still online, if not, removes them from the list
 	if streams_old:
@@ -57,13 +66,15 @@ def update_old(): #checks if the channels are still online, if not, removes them
 			if e is None:
 				del streams_old[i]
 
-def init():
-	getfollows();
-	getids();
 
 def main(e):
+	print('Serial port on %s open.' % (config.SERIAL_PORT))
+	print('Logging in as %s...' % (USERNAME))
+	login();
+	print('Login successful!')
 	while True:
-		init();
+		getfollows();
+		getids();
 		update_online();
 		update_new();
 		update_old();
