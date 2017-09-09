@@ -14,7 +14,7 @@ Before running the script, make sure to fill in the required fields in the confi
 * **INTERVAL** *integer* Check interval in seconds.
 
 ## Hardware
-* Arduino Mega 2560
+* Arduino-compatible board
 * 16x2 LCD Display based on the Hitachi HD44780 driver
 
 Wiring and sample code can be found [here](https://www.arduino.cc/en/Tutorial/LiquidCrystalDisplay).
