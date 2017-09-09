@@ -82,9 +82,7 @@ def main(e):
 			getids();
 			update_online();
 			update_new();
-			print(streams_new)
 			update_old();
-			print(streams_old)
 		except requests.exceptions.HTTPError:
 			print('Internal server error, trying again...')
 		time.sleep(e)
