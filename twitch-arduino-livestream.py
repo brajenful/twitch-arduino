@@ -65,10 +65,14 @@ def update_old(): #checks if the channels are still online, if not, removes them
 	global streams_old
 	if streams_old:
 		for i in range(len(streams_old)):
-			if streams_old[i]:
-				e = client.streams.get_stream_by_user(streams_old[i])
-				if e is None:
-					del streams_old[i]
+			try:
+				for i in range(len(streams_old)):
+					if streams_old[i]:
+						e = client.streams.get_stream_by_user(streams_old[i])
+						if e is None:
+							del streams_old[i]
+			except IndexError:
+				pass
 
 
 def main(e):
