@@ -56,7 +56,10 @@ def update_new(): #checks for any new live channels, and if there's any, sends a
 			if streams_new[0] not in streams_old:
 				e = client.streams.get_stream_by_user(streams_new[0])
 				time.sleep(2)
-				ser.write(b'%r' % (e['channel']['display_name']))
+				try:
+					ser.write(b'%r' % (e['channel']['display_name']))
+				except serial.serialutil.SerialException:	
+					print('Serial exception occurred, trying again...')
 				print('%s is live!' % (e['channel']['display_name']))
 				streams_old.insert(0, streams_new[0])
 			del streams_new[0]
@@ -93,4 +96,3 @@ def main(e):
 
 if __name__ == '__main__':
 	main(INTERVAL);
-	
