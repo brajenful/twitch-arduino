@@ -1,6 +1,8 @@
 import serial, time
 import config
 import requests
+import asyncio
+
 from twitch import TwitchClient
 CLIENT_ID = config.CLIENT_ID
 OAUTH_ID = config.OAUTH_ID
@@ -56,11 +58,13 @@ def update_new(): #checks for any new live channels, and if there's any, sends a
 			if streams_new[0] not in streams_old:
 				e = client.streams.get_stream_by_user(streams_new[0])
 				time.sleep(2)
+				name = e['channel']['display_name']
+				game = e['game']
 				try:
-					ser.write(b'%r' % (e['channel']['display_name']))
+					ser.write(b'%r/%r' % (name, game))
 				except serial.serialutil.SerialException:	
 					print('Serial exception occurred, trying again...')
-				print('%s is live!' % (e['channel']['display_name']))
+				print('%s playing %s' % (name, game))
 				streams_old.insert(0, streams_new[0])
 			del streams_new[0]
 
@@ -90,6 +94,11 @@ def main(e):
 			update_online();
 			update_new();
 			update_old();
+			streams_old_name = []
+			for i in range(len(streams_old)):
+				s = client.streams.get_stream_by_user(streams_old[i])
+				streams_old_name.insert(0, s['channel']['display_name'])
+			print(streams_old_name)
 		except requests.exceptions.HTTPError:
 			print('Internal server error, trying again...')
 		time.sleep(e)
